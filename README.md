@@ -6,6 +6,21 @@ an indev ubg project made in astro because:
 4. i have nothing else to work on
 5. i got mad at nautilusos because something wouldnt work, so what better to do than use typescript instead of js
 
+## roadmap and things i wanna add
+- [ ] games (ofc)
+- [ ] apps (ofc)
+- [ ] proxy (ofc)
+- [ ] movies
+- [ ] chatroom
+- [ ] accounts
+- [ ] friends
+- [ ] game overlay
+- [ ] friend game activity
+- [ ] game share
+- [ ] watch together
+- [ ] vc
+- [ ] lots more social stuff lol
+
 ## if you fork...
 please star the project :P
 
