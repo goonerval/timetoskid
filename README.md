@@ -24,6 +24,19 @@ an indev ubg project made in astro because:
 ## deployment
 you can deploy this to netlify out-of-the-box, but to deploy to vercel, you need to install the `@astrojs/vercel` package and switch the adapter in `astro.config.mjs`. for local deployment, take a look at the instructions below:
 
+---
+
+#### easiest method
+i've included a beautifully composed start command that automatically installs the dependencies, audits and funds them, then starts an astro server. to run it, type in the following:
+
+```sh
+npm run istart
+```
+
+keep in mind you can use your own package manager.
+
+---
+
 #### step 1: clone
 run the following command in your terminal (make sure you have git before you do this)
 ```bash

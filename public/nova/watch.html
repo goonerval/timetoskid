@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen p-8" x-data="app()">
+    <div class="container mx-auto max-w-6xl">
+        <a href="index.html" class="inline-block mb-6 text-purple-400 hover:text-purple-300">← Back to Browse</a>
+
+        <div x-show="content">
+            <h1 class="text-4xl font-bold mb-4" x-text="content?.title || content?.name"></h1>
+
+            <div class="mb-6 flex items-center space-x-4 text-gray-300">
+                <span x-show="content?.release_date" x-text="new Date(content.release_date).getFullYear()"></span>
+                <span x-show="content?.first_air_date" x-text="new Date(content.first_air_date).getFullYear()"></span>
+                <span x-show="content?.vote_average">⭐ <span x-text="content.vote_average.toFixed(1)"></span></span>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg overflow-hidden mb-6">
+                <div class="relative pt-[56.25%]">
+                    <iframe :src="currentVideoUrl" class="absolute top-0 left-0 w-full h-full" frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <template x-if="isShow">
+                <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Episodes</h3>
+
+                    <div class="flex items-center space-x-2 mb-4 overflow-x-auto">
+                        <template x-for="season in seasons" :key="season">
+                            <button @click="selectedSeason = season; updateEpisodes()"
+                                class="px-4 py-2 rounded-lg whitespace-nowrap"
+                                :class="selectedSeason === season ? 'bg-purple-600' : 'bg-gray-700 hover:bg-gray-600'">
+                                Season <span x-text="season"></span>
+                            </button>
+                        </template>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        <template x-for="episode in seasonData?.episodes" :key="episode.episode_number">
+                            <div @click="selectedEpisode = episode.episode_number; loadEpisode()"
+                                class="bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-600"
+                                :class="selectedEpisode === episode.episode_number ? 'ring-2 ring-purple-500' : ''">
+                                <div class="relative aspect-video">
+                                    <img :src="episode.still_path 
+                                              ? 'https://image.tmdb.org/t/p/w300' + episode.still_path
+                                              : 'https://via.placeholder.com/300x169'"
+                                        class="w-full h-full object-cover">
+                                    <div
+                                        class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent">
+                                        <span class="text-sm font-medium">Episode <span
+                                                x-text="episode.episode_number"></span></span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <h4 class="font-medium text-sm" x-text="episode.name"></h4>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold mb-4">Sources</h3>
+                <div class="flex flex-wrap gap-2">
+                    <template x-for="source in availableSources" :key="source.id">
+                        <button @click="selectedSource = source.id; updateVideoUrl()" class="px-4 py-2 rounded-lg"
+                            :class="selectedSource === source.id ? 'bg-purple-600' : 'bg-gray-700 hover:bg-gray-600'"
+                            x-text="source.name">
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Overview</h3>
+                <p class="text-gray-300" x-text="content?.overview"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const availableSources = [
+            {
+                id: 'vidsrc',
+                name: 'VidSrc',
+                urls: {
+                    movie: 'https://vidsrc.xyz/embed/movie/{id}',
+                    tv: 'https://vidsrc.xyz/embed/tv/{id}/{season}/{episode}'
+                }
+            },
+            {
+                id: 'embedsu',
+                name: 'Embed.su',
+                urls: {
+                    movie: 'https://embed.su/embed/movie/{id}',
+                    tv: 'https://embed.su/embed/tv/{id}/{season}/{episode}'
+                }
+            },
+            {
+                id: 'vidsrcpro',
+                name: 'VidSrc Pro',
+                urls: {
+                    movie: 'https://vidsrc.pro/embed/movie/{id}',
+                    tv: 'https://vidsrc.pro/embed/tv/{id}/{season}/{episode}'
+                }
+            },
+            {
+                id: 'vidlink',
+                name: 'VidLink',
+                urls: {
+                    movie: 'https://vidlink.pro/movie/{id}',
+                    tv: 'https://vidlink.pro/tv/{id}/{season}/{episode}'
+                }
+            }
+        ];
+
+        function app() {
+            return {
+                apiKey: '1070730380f5fee0d87cf0382670b255',
+                content: null,
+                contentId: null,
+                contentType: null,
+                isShow: false,
+                selectedSeason: 1,
+                selectedEpisode: 1,
+                seasons: [],
+                seasonData: null,
+                selectedSource: 'vidsrc',
+                availableSources: availableSources,
+                currentVideoUrl: '',
+
+                async init() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    this.contentId = urlParams.get('id');
+                    this.contentType = urlParams.get('type');
+                    this.isShow = this.contentType === 'tv';
+
+                    if (this.contentId && this.contentType) {
+                        await this.fetchContent();
+                        this.updateVideoUrl();
+                    }
+                },
+
+                async fetchContent() {
+                    const url = `https://api.themoviedb.org/3/${this.contentType}/${this.contentId}?api_key=${this.apiKey}`;
+
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.content = data;
+
+                        if (this.isShow) {
+                            this.seasons = Array.from({ length: data.number_of_seasons }, (_, i) => i + 1);
+                            await this.updateEpisodes();
+                        }
+                    } catch (error) {
+                        console.error('Error fetching content:', error);
+                    }
+                },
+
+                async updateEpisodes() {
+                    const url = `https://api.themoviedb.org/3/tv/${this.contentId}/season/${this.selectedSeason}?api_key=${this.apiKey}`;
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.seasonData = data;
+                        this.selectedEpisode = 1;
+                        this.updateVideoUrl();
+                    } catch (error) {
+                        console.error('Error fetching episodes:', error);
+                    }
+                },
+
+                loadEpisode() {
+                    this.updateVideoUrl();
+                },
+
+                updateVideoUrl() {
+                    const source = this.availableSources.find(s => s.id === this.selectedSource);
+                    if (!source) return;
+
+                    const params = this.isShow
+                        ? { id: this.contentId, season: this.selectedSeason, episode: this.selectedEpisode }
+                        : { id: this.contentId };
+
+                    let url = source.urls[this.isShow ? 'tv' : 'movie'];
+                    Object.entries(params).forEach(([key, value]) => {
+                        url = url.replace(`{${key}}`, value);
+                    });
+                    this.currentVideoUrl = url;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

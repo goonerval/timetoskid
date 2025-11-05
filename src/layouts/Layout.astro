@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/navbar.astro";
-import { ViewTransitions } from "astro:transitions"
+import { ViewTransitions } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -20,11 +20,30 @@ import { ViewTransitions } from "astro:transitions"
     />
     <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet" />
     <link rel="stylesheet" href="../styles/global.css" />
+    <script is:inline src="/uv/uv.bundle.js"></script>
+    <script is:inline src="/uv/uv.config.js"></script>
+    <script is:inline src="/baremux/index.js"></script>
+    <script is:inline>
+      async function registerSW() {
+        await navigator.serviceWorker.register("/uv/sw.js").then(() => {
+          console.log(
+            "%cbreeze." + "%c sw registered!",
+            "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+            "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+          );
+        });
+      }
 
-	<ViewTransitions />
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          registerSW();
+        });
+      }
+    </script>
+    <ViewTransitions />
   </head>
   <body>
-	<Navbar></Navbar>
+    <Navbar />
     <slot />
   </body>
 </html>

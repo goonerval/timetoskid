@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <iframe id="proxframe" src="ultraviolet.html" frameborder="0" class="h-1/1 w-1/1 fixed top-0 left-0"
+  ></iframe>
+
+  <div
+    class="controls z-50 fixed bottom-4 left-1/2 w-1/2 translate-x-[-50%] flex"
+  >
+    <div class="leftcontrols"></div>
+    <input
+      placeholder="enter a url or search here"
+      type="text"
+      class="bg-slate-900/35 w-full h-11 border border-white/10 p-5 text-white rounded-full focus:outline-none focus:bg-slate-800/50 transition-all"
+      id="urlbar"
+    />
+    <div class="rightcontrols"></div>
+  </div>
+</Layout>
+<script is:inline>
+  const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+  const wispUrl = "wss://wisp.rhw.one/";
+
+  const inp = document.getElementById("urlbar");
+  const frame = document.getElementById("proxframe");
+
+  async function doSearch() {
+    await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+
+    console.log(
+      "%cbreeze." + "%c recieved search req",
+      "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+      "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+    );
+
+    let url = inp.value;
+    let se = "https://search.brave.com/search?q=";
+
+    if (!url.includes(".")) {
+      url = se + encodeURIComponent(url);
+    } else {
+      if (!url.startsWith("https://") && !url.startsWith("http://")) {
+        url = "https://" + url;
+      }
+    }
+
+    console.log(
+      "%cbreeze." + `%c final search url: \n ${url}`,
+      "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+      "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+    );
+
+    frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+  }
+
+  inp.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      doSearch();
+    }
+  });
+</script>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Loader</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js"
+      defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles/global.css">
+  </head>
+
+  <style>
+    * {
+      font-family: SF Pro Display;
+    }
+  </style>
+
+  <body class="bg-[#040c15] text-white min-h-screen p-8" x-data="app()">
+    <div class="container mx-auto">
+      <div
+        class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between"
+      >
+        <div>
+          <button
+            @click="currentTab = 'movies'"
+            :class="currentTab === 'movies' ? 'bg-slate-400' : 'bg-gray-700'"
+            class="px-4 py-2 rounded-l-full"
+          >
+            Movies
+          </button>
+          <button
+            @click="currentTab = 'shows'"
+            :class="currentTab === 'shows' ? 'bg-slate-400' : 'bg-gray-700'"
+            class="px-4 py-2 rounded-r-full"
+          >
+            TV Shows
+          </button>
+        </div>
+        <div class="w-full md:w-64">
+          <input
+            type="text"
+            x-model="searchQuery"
+            @input="searchContent()"
+            placeholder="Search..."
+            class="w-full bg-gray-800 text-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
+          />
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+      >
+        <template x-for="item in content" :key="item.id">
+          <a
+            :href="'watch.html?id=' + item.id + '&type=' + (currentTab === 'movies' ? 'movie' : 'tv')"
+            class="bg-gray-800 rounded-3xl overflow-hidden hover:scale-105 transition-transform block"
+          >
+            <img
+              :src="'https://image.tmdb.org/t/p/w500' + item.poster_path"
+              :alt="item.title || item.name"
+              class="w-full aspect-[2/3] object-cover"
+            />
+            <div class="p-3">
+              <h3
+                class="text-sm font-semibold truncate"
+                x-text="item.title || item.name"
+              >
+              </h3>
+              <p
+                class="text-xs text-gray-400"
+                x-text="'⭐ ' + (item.vote_average || 'N/A')"
+              >
+              </p>
+            </div>
+          </a>
+        </template>
+      </div>
+
+      <div class="mt-8 flex justify-center space-x-4">
+        <button
+          @click="currentPage > 1 && changePage(currentPage - 1)"
+          :disabled="currentPage === 1"
+          class="bg-gray-800 px-6 py-2 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span class="px-6 py-2">Page <span x-text="currentPage"></span></span>
+        <button
+          @click="changePage(currentPage + 1)"
+          class="bg-gray-800 px-6 py-2 rounded"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function app() {
+        return {
+          apiKey: "1070730380f5fee0d87cf0382670b255",
+          content: [],
+          currentTab: "movies",
+          currentPage: 1,
+          searchQuery: "",
+
+          async init() {
+            await this.fetchContent();
+
+            this.$watch("currentTab", async () => {
+              this.currentPage = 1;
+              this.searchQuery = "";
+              await this.fetchContent();
+            });
+          },
+
+          async searchContent() {
+            if (!this.searchQuery.trim()) {
+              await this.fetchContent();
+              return;
+            }
+
+            const baseUrl = "https://api.themoviedb.org/3";
+            const endpoint = this.currentTab === "movies" ? "movie" : "tv";
+            const url = `${baseUrl}/search/${endpoint}?api_key=${this.apiKey}&query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`;
+
+            try {
+              const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                  Accept: "application/json",
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const data = await response.json();
+              this.content = data.results;
+            } catch (error) {
+              console.error("Error searching content:", error);
+            }
+          },
+
+          async fetchContent() {
+            const baseUrl = "https://api.themoviedb.org/3";
+            const endpoint =
+              this.currentTab === "movies" ? "movie/popular" : "tv/popular";
+            const url = `${baseUrl}/${endpoint}?api_key=${this.apiKey}&page=${this.currentPage}`;
+
+            try {
+              const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                  Accept: "application/json",
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const data = await response.json();
+              this.content = data.results;
+            } catch (error) {
+              console.error("Error fetching content:", error);
+              alert(
+                "Failed to load movies. TMDB API may be blocked by CORS. Try running this on a local server or use a CORS proxy."
+              );
+            }
+          },
+
+          async changePage(page) {
+            this.currentPage = page;
+            if (this.searchQuery.trim()) {
+              await this.searchContent();
+            } else {
+              await this.fetchContent();
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          },
+        };
+      }
+    </script>
+  </body>
+</html>

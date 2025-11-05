@@ -5,12 +5,12 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-    output: "static",
-    adapter: netlify(),
-    site: "https://usebreeze.netlify.app/",
-    vite: {
-        plugins: [
-            tailwindcss(),
-        ]
-    }
+  output: "static",
+  adapter: netlify(),
+  site: "https://usebreeze.netlify.app/",
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
 });

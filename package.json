@@ -6,14 +6,21 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "istart": "npm i && npm audit fund && npm run dev"
   },
   "dependencies": {
     "@astrojs/netlify": "^6.6.0",
+    "@astrojs/react": "^4.4.1",
     "@lucide/astro": "^0.552.0",
+    "@mercuryworkshop/bare-mux": "^2.1.7",
+    "@mercuryworkshop/libcurl-transport": "^1.5.1",
     "@tailwindcss/vite": "^4.1.16",
+    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "astro": "^5.15.3",
     "particles.js": "^2.0.0",
-    "tailwindcss": "^4.1.16"
+    "react-toastify": "^11.0.5",
+    "tailwindcss": "^4.1.16",
+    "vite-plugin-static-copy": "^3.1.4"
   }
 }
