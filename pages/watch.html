@@ -4,10 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch</title>
+    <title>breeze | watch</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/styles/index.css">
+    <link rel="preconnect" href="https://fdn.fontcdn.ir">
+    <link rel="preconnect" href="https://v1.fontapi.ir">
+    <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet">
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen p-8" x-data="app()">
@@ -123,6 +126,14 @@
                     movie: 'https://vidlink.pro/movie/{id}',
                     tv: 'https://vidlink.pro/tv/{id}/{season}/{episode}'
                 }
+            },
+            {
+                id: "vidsrcme",
+                name: "VidSrc ME",
+                urls: {
+                    movie: "https://vidsrcme.su/movie/tt{id}",
+                    tv: "https://vidsrcme.su/tv/{id}/{season}/{episode}"
+                }
             }
         ];
 
@@ -137,7 +148,7 @@
                 selectedEpisode: 1,
                 seasons: [],
                 seasonData: null,
-                selectedSource: 'vidlink',
+                selectedSource: 'vidsrc',
                 availableSources: availableSources,
                 currentVideoUrl: '',
 

@@ -596,7 +596,9 @@
         console.log(urlToSearch)
         
         if (urlToSearch) {
-            nav(urlToSearch)
+            setTimeout(() => {
+                nav(urlToSearch)
+            }, 100)
             console.log("search params exist!")
         }
         

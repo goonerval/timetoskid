@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-    <title>breeze.</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/fav.png">
+    <title>breeze | apps</title>
     <link rel="preconnect" href="https://fdn.fontcdn.ir">
     <link rel="preconnect" href="https://v1.fontapi.ir">
     <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet">
@@ -18,14 +18,14 @@
     <link rel="stylesheet" href="/fa/css/all-pro.css">
 </head>
 
+<style>
+</style>
+
 <body>
-    <br><br><br><br><br>
-    <input type="text" placeholder="search through the apps..." id="apps-search" class="h-fit p-2 px-5 w-2/6 bg-slate-900 border border-white/20 absolute left-1/2 translate-x-[-50%] rounded-full transition-all focus:ring-2 focus:ring-slate-400 focus:outline-none focus:bg-slate-800">
     <br><br><br><br>
-    <div class="apps-container flex flex-wrap w-7/8 fixed left-1/2 translate-x-[-50%] justify-center">
-        <div class="example-app bg-gray-800 rounded-3xl">
-            h
-        </div>
+    <input onkeyup="searchApps(this.value)" type="text" placeholder="search through the apps..." id="apps-search" class="h-fit p-2 px-5 w-2/6 bg-slate-900 border border-white/20 absolute left-1/2 translate-x-[-50%] rounded-full transition-all focus:ring-2 focus:ring-slate-400 focus:outline-none focus:bg-slate-800">
+    <br><br><br>
+    <div class="apps-container flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
     </div>
 
     <script>
@@ -37,6 +37,50 @@
         async function gj() {
             res = await fetch("/assets/json/apps.json");
             data = await res.json()
+        }
+
+        function load() {
+            gj().then(() => { console.log(
+                    "%cbreeze." + "%c recieved json data!",
+                    "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+                    "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+                ) }).then(() => {
+                data.forEach(item => {
+                    const newAppContainer = document.createElement("div")
+                    const newAnchor = document.createElement("a")
+                    const newImage = document.createElement("img")
+                    const newTitleContainer = document.createElement("div")
+                    const newTitle = document.createElement("span")
+
+                    newAppContainer.classList.add("cursor-pointer", "h-36", "overflow-hidden", "w-57", "bg-gray-800", "rounded-3xl", "m-2", "hover:scale-105", "transition-all", "app")
+                    newAnchor.href = `/pages/search.html?i=${item.url}`
+                    newImage.classList.add("object-cover", "app-img", "hover:h-3/4", "h-full", "transition-all", "aspect-2/1", "w-full")
+                    newTitleContainer.classList.add("app-title-cont", "h-1/4", "pt-1.5", "px-5")
+                    newTitle.classList.add("font-medium")
+                    newTitle.textContent = item.name
+                    newImage.src = item.img
+
+                    newAppContainer.appendChild(newAnchor)
+                    newAnchor.appendChild(newImage)
+                    newAnchor.appendChild(newTitleContainer)
+                    newTitleContainer.appendChild(newTitle)
+
+                    aCont.appendChild(newAppContainer)
+                })
+            })
+        }
+
+        load()
+
+        function searchApps(term) {
+            const apps = document.querySelectorAll(".app")
+            apps.forEach((app) => {
+                if (!app.querySelector("span").textContent.toLowerCase().includes(term.toLowerCase())) { // oh wow thats a lot of functions
+                    app.style.display = "none"
+                } else {
+                    app.style.display = "block"
+                }
+            })
         }
     </script>
 </body>
