@@ -190,23 +190,23 @@
             <div class="browser-buttons">
                 <div class="hcontainer">
                     <button onclick="b()">
-                        <i class="fas fa-chevron-left"></i>
+                        <i class="far fa-chevron-left"></i>
                     </button>
                     <button onclick="f()">
-                        <i class="fas fa-chevron-right"></i>
+                        <i class="far fa-chevron-right"></i>
                     </button>
                     <button onclick="r()">
-                        <i class="fas fa-rotate-right"></i>
+                        <i class="far fa-rotate-right"></i>
                     </button>
                     <input type="text" id="searchbar" placeholder="search anything...">
                     <button onclick="full()">
-                        <i class="fas fa-expand"></i>
+                        <i class="far fa-expand"></i>
                     </button>
                     <button onclick="eruda.init()">
-                        <i class="fas fa-code-simple"></i>
+                        <i class="far fa-square-code"></i>
                     </button>
                     <button onclick="hideBrowser()">
-                        <i class="fas fa-house"></i>
+                        <i class="far fa-house"></i>
                     </button>
                 </div>
             </div>
@@ -516,7 +516,15 @@
             cTab.historyIndex--
             const u = cTab.history[cTab.historyIndex]
             cTab.url = u
-            const furl = __uv$config.prefix + __uv$config.encodeUrl(u)
+            let furl
+            const ba = localStorage.getItem("breeze_backend")
+            if (ba.toLowerCase() === "scramjet") {
+                furl = scramjet.encodeUrl(u)
+            } else if (ba.toLowerCase() === "ultraviolet") {
+                furl = __uv$config.prefix + __uv$config.encodeUrl(u)
+            } else {
+                furl = scramjet.encodeUrl(u)
+            }
 
             go(furl)
         }
@@ -527,7 +535,15 @@
             cTab.historyIndex++
             const u = cTab.history[cTab.historyIndex]
             cTab.url = u
-            const furl = __uv$config.prefix + __uv$config.encodeUrl(u)
+            let furl
+            const ba = localStorage.getItem("breeze_backend")
+            if (ba.toLowerCase() === "scramjet") {
+                furl = scramjet.encodeUrl(u)
+            } else if (ba.toLowerCase() === "ultraviolet") {
+                furl = __uv$config.prefix + __uv$config.encodeUrl(u)
+            } else {
+                furl = scramjet.encodeUrl(u)
+            }
 
             go(furl)
         }
