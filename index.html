@@ -711,8 +711,9 @@
 
         function toggleSettings() {
             if (settingsHolder.classList.contains("settings-hidden")) {
-                if (appsHolder.classList.contains("settings-shown") || chatHolder.classList.contains("settings-shown")) {
+                if (appsHolder.classList.contains("settings-shown")) {
                     toggleApps()
+                } else if (chatHolder.classList.contains("settings-shown")) {
                     toggleChat()
                 }
                 const newBlurOverlay = document.createElement("div")
@@ -729,8 +730,9 @@
         }
         function toggleApps() {
             if (appsHolder.classList.contains("settings-hidden")) {
-                if (settingsHolder.classList.contains("settings-shown") || chatHolder.classList.contains("settings-shown")) {
+                if (settingsHolder.classList.contains("settings-shown")) {
                     toggleSettings()
+                } else if (chatHolder.classList.contains("settings-shown")) {
                     toggleChat()
                 }
                 const newBlurOverlay = document.createElement("div")
@@ -748,8 +750,9 @@
 
         function toggleChat() {
                 if (chatHolder.classList.contains("settings-hidden")) {
-                    if (settingsHolder.classList.contains("settings-shown") || appsHolder.classList.contains("settings-shown")) {
+                    if (settingsHolder.classList.contains("settings-shown")) {
                         toggleSettings()
+                    } else if (appsHolder.classList.contains("settings-shown")) {
                         toggleApps()
                     }
                     const newBlurOverlay = document.createElement("div")
