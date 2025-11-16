@@ -22,6 +22,12 @@ async function handleRequest(event) {
 }
 
 self.addEventListener('fetch', (event) => {
+    const url = event.request.url;
+
+    if (url.includes("supabase.co")) {
+      return;
+    }
+
     event.respondWith(handleRequest(event));
 });
 

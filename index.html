@@ -21,80 +21,117 @@
     <link rel="stylesheet" href="/fa/css/all-pro.css">
     <link rel="stylesheet" href="/assets/css/t.css">
     <link rel="stylesheet" href="/assets/css/dropdown.css">
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+
     <script src="/assets/js/splash.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const { createClient } = supabase
 
-        window.supabase = createClient(
-    "https://snizpdqspqqarfovuoll.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuaXpwZHFzcHFxYXJmb3Z1b2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyNTcwODgsImV4cCI6MjA3ODgzMzA4OH0.5Hz6lM-Z_2ytbYMOrd2lHOSXCnZ4JgawP2mXGgbT2vM",
-    {
-        auth: {
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: true
-        }
-    }
-);
+            window.supabase = createClient(
+                "https://tpmgmesmkryvwcesmkmv.supabase.co",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbWdtZXNta3J5dndjZXNta212Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTEzMzUsImV4cCI6MjA3ODg2NzMzNX0.0IX7z1owDHOkA5JF8x9DLT-knB6ZEeyvFn7l4GoFAkA",
+                {
+                    auth: {
+                        autoRefreshToken: true,
+                        persistSession: true,
+                        detectSessionInUrl: true
+                    }
+                }
+            );
+
+            // FORCE RESET CORRUPTED SESSION
+            (async function resetAuth() {
+                console.log('Resetting authentication state...');
+
+                // Clear all auth-related storage
+                const authKeys = [
+                    'supabase.auth.token',
+                    'breeze-supabase-auth',
+                    'sb-snizpdqspqqarfovuoll-auth-token'
+                ];
+
+                authKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    sessionStorage.removeItem(key);
+                });
+
+                // Force sign out to clear any server session
+                try {
+                    await window.supabase.auth.signOut();
+                } catch (e) {
+                    console.log('Force signout completed');
+                }
+
+                // Clear any existing session
+                await window.supabase.auth.setSession(null);
+
+                console.log('Auth reset complete - users will need to sign in again');
+
+                // Update UI to show logged out state
+                setTimeout(() => {
+                    document.querySelector("#auth-section i")?.classList.replace("fa-user-check", "fa-user");
+                    document.getElementById("signout-btn").style.display = "none";
+                    const authBtn = document.querySelector("#auth-section a");
+                    authBtn.setAttribute("onclick", "toggleAuth()");
+                }, 100);
+            })();
 
     </script>
     <script>
         async function signUp(u, p) {
-                try {
-                    const { data, error } = await window.supabase.auth.signUp({
-                        email: `${u}@breezeaccounts.lol`,
-                        password: p,
-                    });
-                    if (error) throw error;
-                    return data;
-                } catch (error) {
-                    console.error('Sign up error:', error);
-                    throw error;
-                }
+            try {
+                const { data, error } = await window.supabase.auth.signUp({
+                    email: `${u}@breezeaccounts.lol`,
+                    password: p,
+                });
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Sign up error:', error);
+                throw error;
             }
+        }
 
-            async function signIn(u, p) {
-                try {
-                    const { data, error } = await window.supabase.auth.signInWithPassword({
-                        email: `${u}@breezeaccounts.lol`,
-                        password: p,
-                    });
-                    if (error) throw error;
-                    return data;
-                } catch (error) {
-                    console.error('Sign in error:', error);
-                    throw error;
-                }
+        async function signIn(u, p) {
+            try {
+                const { data, error } = await window.supabase.auth.signInWithPassword({
+                    email: `${u}@breezeaccounts.lol`,
+                    password: p,
+                });
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Sign in error:', error);
+                throw error;
             }
+        }
 
-            async function signOut() {
-                try {
-                    const { error } = await window.supabase.auth.signOut();
-                    if (error) throw error;
-                } catch (error) {
-                    console.error('Sign out error:', error);
-                    throw error;
-                }
+        async function signOut() {
+            try {
+                const { error } = await window.supabase.auth.signOut();
+                if (error) throw error;
+            } catch (error) {
+                console.error('Sign out error:', error);
+                throw error;
             }
+        }
 
-            async function getUser() {
-                try {
-                    const { data: { session }, error } = await window.supabase.auth.getSession();
-                    if (error) throw error;
-                    return session?.user || null;
-                } catch (error) {
-                    console.error('Get user error:', error);
-                    return null;
-                }
+        async function getUser() {
+            try {
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                if (error) throw error;
+                return session?.user || null;
+            } catch (error) {
+                console.error('Get user error:', error);
+                return null;
             }
+        }
     </script>
     <script>
         newTab()
     </script>
     <script>
-        
+
 
         function toast(icon, msg) {
             const container = document.querySelector(".toast-container")
@@ -152,110 +189,110 @@
     <script>
         let authMode = "signin";
 
-            async function checkAuth() {
-                try {
-                    const user = await getUser();
-                    if (user) {
-                        document.querySelector("#auth-section i").classList.replace("fa-user", "fa-user-check");
-                        document.getElementById("signout-btn").style.display = "block";
-
-                        const authBtn = document.querySelector("#auth-section a");
-                        authBtn.setAttribute("onclick", "toggleDashboard()");
-
-                        showToast("success", `Logged in as ${user.email.split("@")[0]}`, "fas fa-check-circle");
-                    }
-                } catch (error) {
-                    console.error('Auth check error:', error);
-                }
-            }
-
-            function toggleAuth() {
-                const authHolder = document.querySelector(".auth-container");
-                if (authHolder.classList.contains("settings-hidden")) {
-                    if (document.querySelector(".apps-wrapper").classList.contains("settings-shown")) {
-                        toggleApps();
-                    }
-                    if (document.querySelector(".settings-container").classList.contains("settings-shown")) {
-                        toggleSettings();
-                    }
-                    const newBlurOverlay = document.createElement("div");
-                    newBlurOverlay.classList.add("blurOverlay");
-                    document.body.appendChild(newBlurOverlay);
-                    authHolder.classList.remove("settings-hidden");
-                    authHolder.classList.add("settings-shown");
-                } else {
-                    authHolder.classList.remove("settings-shown");
-                    authHolder.classList.add("settings-hidden");
-                    document.querySelector(".blurOverlay")?.remove();
-                }
-            }
-
-            function toggleAuthMode() {
-                authMode = authMode === "signin" ? "signup" : "signin";
-                document.getElementById("auth-title").textContent = authMode === "signin" ? "Sign In" : "Sign Up";
-                document.getElementById("auth-toggle").textContent = authMode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in";
-            }
-
-            async function handleAuth() {
-                const username = document.getElementById("auth-username").value;
-                const password = document.getElementById("auth-password").value;
-
-                if (!username || !password) {
-                    showToast("error", "Please fill in all fields", "fas fa-times-circle");
-                    return;
-                }
-
-                try {
-                    if (authMode === "signup") {
-                        await signUp(username, password);
-                        showToast("success", "Account created! Please sign in.", "fas fa-check-circle");
-                        toggleAuthMode();
-                    } else {
-                        await signIn(username, password);
-                        showToast("success", "Logged in!", "fas fa-check-circle");
-                        toggleAuth();
-                        await checkAuth();
-                        document.getElementById("auth-username").value = "";
-                        document.getElementById("auth-password").value = "";
-                    }
-                } catch (e) {
-                    if (e.message.includes('fetch')) {
-                        showToast("error", "Network error. Check your connection.", "fas fa-times-circle");
-                    } else {
-                        showToast("error", e.message, "fas fa-times-circle");
-                    }
-                }
-            }
-
-            async function handleSignOut() {
-                try {
-                    await signOut();
-                    showToast("success", "Signed out. Reloading...", "fas fa-check-circle");
-                    document.querySelector("#auth-section i").classList.replace("fa-user-check", "fa-user");
-                    document.getElementById("signout-btn").style.display = "none";
+        async function checkAuth() {
+            try {
+                const user = await getUser();
+                if (user) {
+                    document.querySelector("#auth-section i").classList.replace("fa-user", "fa-user-check");
+                    document.getElementById("signout-btn").style.display = "block";
 
                     const authBtn = document.querySelector("#auth-section a");
-                    authBtn.setAttribute("onclick", "toggleAuth()");
+                    authBtn.setAttribute("onclick", "toggleDashboard()");
 
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } catch (error) {
-                    showToast("error", "Sign out failed", "fas fa-times-circle");
+                    showToast("success", `Logged in as ${user.email.split("@")[0]}`, "fas fa-check-circle");
                 }
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        function toggleAuth() {
+            const authHolder = document.querySelector(".auth-container");
+            if (authHolder.classList.contains("settings-hidden")) {
+                if (document.querySelector(".apps-wrapper").classList.contains("settings-shown")) {
+                    toggleApps();
+                }
+                if (document.querySelector(".settings-container").classList.contains("settings-shown")) {
+                    toggleSettings();
+                }
+                const newBlurOverlay = document.createElement("div");
+                newBlurOverlay.classList.add("blurOverlay");
+                document.body.appendChild(newBlurOverlay);
+                authHolder.classList.remove("settings-hidden");
+                authHolder.classList.add("settings-shown");
+            } else {
+                authHolder.classList.remove("settings-shown");
+                authHolder.classList.add("settings-hidden");
+                document.querySelector(".blurOverlay")?.remove();
+            }
+        }
+
+        function toggleAuthMode() {
+            authMode = authMode === "signin" ? "signup" : "signin";
+            document.getElementById("auth-title").textContent = authMode === "signin" ? "Sign In" : "Sign Up";
+            document.getElementById("auth-toggle").textContent = authMode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in";
+        }
+
+        async function handleAuth() {
+            const username = document.getElementById("auth-username").value;
+            const password = document.getElementById("auth-password").value;
+
+            if (!username || !password) {
+                showToast("error", "Please fill in all fields", "fas fa-times-circle");
+                return;
             }
 
-            window.addEventListener("load", async () => {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                await checkAuth();
-            });
-
-            window.supabase.auth.onAuthStateChange((event, session) => {
-                console.log('Auth state changed:', event, session);
-                if (event === 'SIGNED_IN') {
-                    checkAuth();
+            try {
+                if (authMode === "signup") {
+                    await signUp(username, password);
+                    showToast("success", "Account created! Please sign in.", "fas fa-check-circle");
+                    toggleAuthMode();
+                } else {
+                    await signIn(username, password);
+                    showToast("success", "Logged in!", "fas fa-check-circle");
+                    toggleAuth();
+                    await checkAuth();
+                    document.getElementById("auth-username").value = "";
+                    document.getElementById("auth-password").value = "";
                 }
-            });
+            } catch (e) {
+                if (e.message.includes('fetch')) {
+                    showToast("error", "Network error. Check your connection.", "fas fa-times-circle");
+                } else {
+                    showToast("error", e.message, "fas fa-times-circle");
+                }
+            }
+        }
+
+        async function handleSignOut() {
+            try {
+                await signOut();
+                showToast("success", "Signed out. Reloading...", "fas fa-check-circle");
+                document.querySelector("#auth-section i").classList.replace("fa-user-check", "fa-user");
+                document.getElementById("signout-btn").style.display = "none";
+
+                const authBtn = document.querySelector("#auth-section a");
+                authBtn.setAttribute("onclick", "toggleAuth()");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } catch (error) {
+                showToast("error", "Sign out failed", "fas fa-times-circle");
+            }
+        }
+
+        window.addEventListener("load", async () => {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await checkAuth();
+        });
+
+        window.supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event, session);
+            if (event === 'SIGNED_IN') {
+                checkAuth();
+            }
+        });
     </script>
     </body>
 
@@ -317,7 +354,8 @@
         <br>
         <div class="searchathome">
             <i class="fas fa-search"></i>
-            <input id="homesearch" autocomplete="off" style="margin-right: -3%;" type="text" placeholder="search anything..." />
+            <input id="homesearch" autocomplete="off" style="margin-right: -3%;" type="text"
+                placeholder="search anything..." />
         </div>
         <br><br>
     </div>
@@ -480,7 +518,8 @@
     </div>
 
     <div class="chat-container settings-hidden">
-        <widgetbot server="1439475183294611590" channel="1439475383865966652" width="595px" height="46.45vh" style="border-radius: 25px;"></widgetbot>
+        <widgetbot server="1439475183294611590" channel="1439475383865966652" width="595px" height="46.45vh"
+            style="border-radius: 25px;"></widgetbot>
     </div>
 
     <div class="dashboard-container settings-hidden">
@@ -502,8 +541,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-    
-            <!--
+
             <div class="dashboard-stats">
                 <div class="stat-card">
                     <i class="fas fa-clock"></i>
@@ -527,15 +565,14 @@
                     </div>
                 </div>
             </div>
-            -->
-    
+
             <div style="display: none;" class="dashboard-section">
                 <h2>Recent Activity</h2>
                 <div id="recent-activity" class="activity-list">
                     <p class="empty-state">Activity coming soon!</p>
                 </div>
             </div>
-    
+
             <div class="dashboard-section">
                 <h2>Settings</h2>
                 <div class="settings-list">
@@ -564,7 +601,7 @@
             </div>
         </div>
     </div>
-    
+
     <input type="file" id="pfp-upload" accept="image/*" style="display: none;">
 
     <script src="/assets/js/dropdown.js"></script>
@@ -621,58 +658,58 @@
     </script>
     <script>
         async function registerSW() {
-                if ("serviceWorker" in navigator) {
-                    await navigator.serviceWorker.register("/uv/sw.js").then(() => {
-                        console.log(
-                            "%cbreeze." + "%c UV sw registered!",
-                            "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
-                            "color: white; background: transparent; border-radius: 0px; padding: 0px;"
-                        );
-                        setTimeout(() => {
-                            showToast("success", "Ultraviolet worker initialized!", "fas fa-check-circle")
-                            console.log("shown toast")
-                        }, 1000)
-                    }).catch(e => {
-                        console.log("Error registering service worker (UV): " + e)
-                        showToast("error", "Failed to register service worker", "fas fa-times-circle")
-                    });
+            if ("serviceWorker" in navigator) {
+                await navigator.serviceWorker.register("/uv/sw.js").then(() => {
+                    console.log(
+                        "%cbreeze." + "%c UV sw registered!",
+                        "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+                        "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+                    );
+                    setTimeout(() => {
+                        showToast("success", "Ultraviolet worker initialized!", "fas fa-check-circle")
+                        console.log("shown toast")
+                    }, 1000)
+                }).catch(e => {
+                    console.log("Error registering service worker (UV): " + e)
+                    showToast("error", "Failed to register service worker", "fas fa-times-circle")
+                });
 
-                    await navigator.serviceWorker.register("/sw.js").then(() => {
-                        console.log(
-                            "%cbreeze." + "%c SJ sw registered!",
-                            "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
-                            "color: white; background: transparent; border-radius: 0px; padding: 0px;"
-                        );
-                        setTimeout(() => {
-                            showToast("success", "Scramjet worker initialized", "fas fa-check-circle")
-                            console.log("shown toast")
-                        }, 1000)
-                    }).catch(e => {
-                        console.log("Error registering service worker (SJ): " + e)
-                        showToast("error", "Failed to register service worker", "fas fa-times-circle")
-                    });
-                }
+                await navigator.serviceWorker.register("/sw.js").then(() => {
+                    console.log(
+                        "%cbreeze." + "%c SJ sw registered!",
+                        "color: white; background: linear-gradient(to bottom right, #040c16, #000000); border-radius: 5px; font-weight: bold; padding: 6px; font-family: sans-serif;",
+                        "color: white; background: transparent; border-radius: 0px; padding: 0px;"
+                    );
+                    setTimeout(() => {
+                        showToast("success", "Scramjet worker initialized", "fas fa-check-circle")
+                        console.log("shown toast")
+                    }, 1000)
+                }).catch(e => {
+                    console.log("Error registering service worker (SJ): " + e)
+                    showToast("error", "Failed to register service worker", "fas fa-times-circle")
+                });
             }
+        }
 
-            window.addEventListener("load", () => {
-                registerSW();
-                lucide.createIcons();
-            });
+        window.addEventListener("load", () => {
+            registerSW();
+            lucide.createIcons();
+        });
 
-            const contentFrame = document.getElementById('contentFrame');
-            const homeContent = document.getElementById('homeContent');
-            const navLinks = document.querySelectorAll('nav a[data-page]');
+        const contentFrame = document.getElementById('contentFrame');
+        const homeContent = document.getElementById('homeContent');
+        const navLinks = document.querySelectorAll('nav a[data-page]');
 
-            function navTo(l) {
-                if (l === "home") {
-                    contentFrame.style.display = "none"
-                    homeContent.style.display = "block"
-                } else {
-                    homeContent.style.display = "none"
-                    contentFrame.style.display = "block"
-                    contentFrame.src = `/pages/${l}.html`
-                }
+        function navTo(l) {
+            if (l === "home") {
+                contentFrame.style.display = "none"
+                homeContent.style.display = "block"
+            } else {
+                homeContent.style.display = "none"
+                contentFrame.style.display = "block"
+                contentFrame.src = `/pages/${l}.html`
             }
+        }
     </script>
     <script>
         let aTab = 0
@@ -805,24 +842,24 @@
         }
 
         function toggleChat() {
-                if (chatHolder.classList.contains("settings-hidden")) {
-                    if (settingsHolder.classList.contains("settings-shown")) {
-                        toggleSettings()
-                    } else if (appsHolder.classList.contains("settings-shown")) {
-                        toggleApps()
-                    }
-                    const newBlurOverlay = document.createElement("div")
-                    newBlurOverlay.classList.add("blurOverlay")
-                    document.body.appendChild(newBlurOverlay)
-                    chatHolder.classList.remove("settings-hidden")
-                    chatHolder.classList.add("settings-shown")
-                } else {
-                    chatHolder.classList.remove("settings-shown")
-                    chatHolder.classList.add("settings-hidden")
-                    const newBlurOverlay = document.querySelector(".blurOverlay")
-                    newBlurOverlay.remove()
+            if (chatHolder.classList.contains("settings-hidden")) {
+                if (settingsHolder.classList.contains("settings-shown")) {
+                    toggleSettings()
+                } else if (appsHolder.classList.contains("settings-shown")) {
+                    toggleApps()
                 }
+                const newBlurOverlay = document.createElement("div")
+                newBlurOverlay.classList.add("blurOverlay")
+                document.body.appendChild(newBlurOverlay)
+                chatHolder.classList.remove("settings-hidden")
+                chatHolder.classList.add("settings-shown")
+            } else {
+                chatHolder.classList.remove("settings-shown")
+                chatHolder.classList.add("settings-hidden")
+                const newBlurOverlay = document.querySelector(".blurOverlay")
+                newBlurOverlay.remove()
             }
+        }
     </script>
     <script>
         let searchE
@@ -1014,7 +1051,7 @@
             }
 
             stats.sitesVisited++
-            
+
             console.log(stats.sitesVisited)
 
             localStorage.setItem(`breeze_stats_${user.id}`, JSON.stringify(stats))
@@ -1164,176 +1201,176 @@
         }
 
         let userStats = {
-                timeSpent: 0,
-                sitesVisited: 0,
-                recentActivity: []
-            };
+            timeSpent: 0,
+            sitesVisited: 0,
+            recentActivity: []
+        };
 
-            function toggleDashboard() {
-                const dashboard = document.querySelector(".dashboard-container");
-                if (dashboard.classList.contains("settings-hidden")) {
-                    if (document.querySelector(".apps-wrapper").classList.contains("settings-shown")) {
-                        toggleApps();
-                    }
-                    if (document.querySelector(".settings-container").classList.contains("settings-shown")) {
-                        toggleSettings();
-                    }
-                    if (document.querySelector(".auth-container").classList.contains("settings-shown")) {
-                        toggleAuth();
-                    }
-                    const newBlurOverlay = document.createElement("div");
-                    newBlurOverlay.classList.add("blurOverlay");
-                    document.body.appendChild(newBlurOverlay);
-                    dashboard.classList.remove("settings-hidden");
-                    dashboard.classList.add("settings-shown");
-                    loadDashboard();
-                } else {
-                    dashboard.classList.remove("settings-shown");
-                    dashboard.classList.add("settings-hidden");
-                    document.querySelector(".blurOverlay")?.remove();
+        function toggleDashboard() {
+            const dashboard = document.querySelector(".dashboard-container");
+            if (dashboard.classList.contains("settings-hidden")) {
+                if (document.querySelector(".apps-wrapper").classList.contains("settings-shown")) {
+                    toggleApps();
                 }
+                if (document.querySelector(".settings-container").classList.contains("settings-shown")) {
+                    toggleSettings();
+                }
+                if (document.querySelector(".auth-container").classList.contains("settings-shown")) {
+                    toggleAuth();
+                }
+                const newBlurOverlay = document.createElement("div");
+                newBlurOverlay.classList.add("blurOverlay");
+                document.body.appendChild(newBlurOverlay);
+                dashboard.classList.remove("settings-hidden");
+                dashboard.classList.add("settings-shown");
+                loadDashboard();
+            } else {
+                dashboard.classList.remove("settings-shown");
+                dashboard.classList.add("settings-hidden");
+                document.querySelector(".blurOverlay")?.remove();
+            }
+        }
+
+        async function loadDashboard() {
+            const user = await getUser();
+            if (!user) return;
+
+            document.getElementById("dashboard-username").textContent = user.user_metadata?.username || user.email.split("@")[0];
+            document.getElementById("dashboard-email").textContent = user.email;
+
+            if (user.user_metadata?.avatar_url) {
+                document.getElementById("dashboard-pfp").src = user.user_metadata.avatar_url;
             }
 
-            async function loadDashboard() {
-                const user = await getUser();
-                if (!user) return;
+            const accountAge = Math.floor((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
+            document.getElementById("account-age").textContent = `${accountAge}d`;
+            console.log(`Current account age: ${accountAge}`)
 
-                document.getElementById("dashboard-username").textContent = user.user_metadata?.username || user.email.split("@")[0];
-                document.getElementById("dashboard-email").textContent = user.email;
+            const stats = JSON.parse(localStorage.getItem(`breeze_stats_${user.id}`));
 
-                if (user.user_metadata?.avatar_url) {
-                    document.getElementById("dashboard-pfp").src = user.user_metadata.avatar_url;
-                }
+            const hours = Math.floor(stats.timeSpent / 3600);
+            const minutes = Math.floor(stats.timeSpent % 3600 / 60);
+            document.getElementById("time-spent").textContent = `${hours}h ${minutes}m`;
+            console.log(`Total Time: ${hours}h, ${minutes}m`)
+            document.getElementById("sites-visited").textContent = stats.sitesVisited;
+            console.log(`Total sites visited: ${stats.sitesVisited}`)
 
-                const accountAge = Math.floor((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
-                document.getElementById("account-age").textContent = `${accountAge}d`;
-                console.log(`Current account age: ${accountAge}`)
-
-                const stats = JSON.parse(localStorage.getItem(`breeze_stats_${user.id}`));
-
-                const hours = Math.floor(stats.timeSpent / 3600);
-                const minutes = Math.floor(stats.timeSpent % 3600 / 60);
-                document.getElementById("time-spent").textContent = `${hours}h ${minutes}m`;
-                console.log(`Total Time: ${hours}h, ${minutes}m`)
-                document.getElementById("sites-visited").textContent = stats.sitesVisited;
-                console.log(`Total sites visited: ${stats.sitesVisited}`)
-
-                const activityList = document.getElementById("recent-activity");
-                if (stats.activity && stats.activity.length > 0) {
-                    activityList.innerHTML = stats.activity.slice(-10).reverse().map(item => `
+            const activityList = document.getElementById("recent-activity");
+            if (stats.activity && stats.activity.length > 0) {
+                activityList.innerHTML = stats.activity.slice(-10).reverse().map(item => `
             <div class="activity-item">
                 <p>${item.url}</p>
                 <span>${new Date(item.time).toLocaleTimeString()}</span>
             </div>
         `).join('');
-                }
             }
+        }
 
-            document.getElementById('pfp-upload').addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
+        document.getElementById('pfp-upload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const base64 = event.target.result;
-
-                    try {
-                        const { error } = await window.supabase.auth.updateUser({
-                            data: { avatar_url: base64 }
-                        });
-
-                        if (error) throw error;
-
-                        document.getElementById("dashboard-pfp").src = base64;
-                        showToast("success", "Profile picture updated!", "fas fa-check-circle");
-                    } catch (e) {
-                        showToast("error", e.message, "fas fa-times-circle");
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-
-            async function changeUsername() {
-                const newUsername = prompt("Enter new username:");
-                if (!newUsername) return;
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const base64 = event.target.result;
 
                 try {
                     const { error } = await window.supabase.auth.updateUser({
-                        data: { username: newUsername }
+                        data: { avatar_url: base64 }
                     });
 
                     if (error) throw error;
 
-                    document.getElementById("dashboard-username").textContent = newUsername;
-                    showToast("success", "Username updated!", "fas fa-check-circle");
+                    document.getElementById("dashboard-pfp").src = base64;
+                    showToast("success", "Profile picture updated!", "fas fa-check-circle");
                 } catch (e) {
                     showToast("error", e.message, "fas fa-times-circle");
                 }
-            }
+            };
+            reader.readAsDataURL(file);
+        });
 
-            async function changePassword() {
-                const newPassword = prompt("Enter new password:");
-                if (!newPassword) return;
+        async function changeUsername() {
+            const newUsername = prompt("Enter new username:");
+            if (!newUsername) return;
 
-                try {
-                    const { error } = await window.supabase.auth.updateUser({
-                        password: newPassword
-                    });
-
-                    if (error) throw error;
-
-                    showToast("success", "Password updated!", "fas fa-check-circle");
-                } catch (e) {
-                    showToast("error", e.message, "fas fa-times-circle");
-                }
-            }
-
-            setInterval(async () => {
-                const user = await getUser();
-                if (user) {
-                    const stats = JSON.parse(localStorage.getItem(`breeze_stats_${user.id}`)) || { timeSpent: 0, sitesVisited: 0, activity: [] };
-                    stats.timeSpent += 1;
-                    console.log("Time updated: " + stats.timeSpent)
-                    console.log("Minutes total: " + Math.floor(stats.timeSpent % 3600 / 60))
-                    localStorage.setItem(`breeze_stats_${user.id}`, JSON.stringify(stats));
-                }
-            }, 1000);
-
-            const homesearch = document.getElementById("homesearch");
-
-                function rSearch(input) {
-                    let url = input;
-                    if (!url.includes(".") || url.includes(" ")) {
-                        url = "https://search.brave.com/search?q=" + url;
-                    } else {
-                        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                            url = "https://" + url;
-                        }
-                    }
-
-                    const b = document.querySelector(".browser-container")
-                    const frames = document.querySelectorAll(".viewframe")
-
-                    b.style.opacity = 1
-                    b.style.pointerEvents = "all"
-
-                    frames.forEach(frame => {
-                        frame.style.opacity = 1
-                        frame.style.pointerEvents = "all"
-                    })
-
-                    console.log("rSearch")
-                    newTab()
-                    nav(url)
-                    switchTab(aTab)
-                }
-
-                homesearch.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        rSearch(homesearch?.value.trim());
-                        console.log("rsearching")
-                    }
-                    console.log("check")
+            try {
+                const { error } = await window.supabase.auth.updateUser({
+                    data: { username: newUsername }
                 });
+
+                if (error) throw error;
+
+                document.getElementById("dashboard-username").textContent = newUsername;
+                showToast("success", "Username updated!", "fas fa-check-circle");
+            } catch (e) {
+                showToast("error", e.message, "fas fa-times-circle");
+            }
+        }
+
+        async function changePassword() {
+            const newPassword = prompt("Enter new password:");
+            if (!newPassword) return;
+
+            try {
+                const { error } = await window.supabase.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) throw error;
+
+                showToast("success", "Password updated!", "fas fa-check-circle");
+            } catch (e) {
+                showToast("error", e.message, "fas fa-times-circle");
+            }
+        }
+
+        setInterval(async () => {
+            const user = await getUser();
+            if (user) {
+                const stats = JSON.parse(localStorage.getItem(`breeze_stats_${user.id}`)) || { timeSpent: 0, sitesVisited: 0, activity: [] };
+                stats.timeSpent += 1;
+                console.log("Time updated: " + stats.timeSpent)
+                console.log("Minutes total: " + Math.floor(stats.timeSpent % 3600 / 60))
+                localStorage.setItem(`breeze_stats_${user.id}`, JSON.stringify(stats));
+            }
+        }, 1000);
+
+        const homesearch = document.getElementById("homesearch");
+
+        function rSearch(input) {
+            let url = input;
+            if (!url.includes(".") || url.includes(" ")) {
+                url = "https://search.brave.com/search?q=" + url;
+            } else {
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    url = "https://" + url;
+                }
+            }
+
+            const b = document.querySelector(".browser-container")
+            const frames = document.querySelectorAll(".viewframe")
+
+            b.style.opacity = 1
+            b.style.pointerEvents = "all"
+
+            frames.forEach(frame => {
+                frame.style.opacity = 1
+                frame.style.pointerEvents = "all"
+            })
+
+            console.log("rSearch")
+            newTab()
+            nav(url)
+            switchTab(aTab)
+        }
+
+        homesearch.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                rSearch(homesearch?.value.trim());
+                console.log("rsearching")
+            }
+            console.log("check")
+        });
 
     </script>
