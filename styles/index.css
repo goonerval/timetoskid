@@ -386,6 +386,7 @@ p a:hover {
 .browser-frame.active {
     display: block;
     opacity: 1;
+    pointer-events: all;
 }
 
 .browser-controls {
