@@ -1,5 +1,5 @@
-> [!CAUTION]
-> i am aware of the authentication bug regarding profile functions after token refreshes, and i am working to fix this bug.
+> [!IMPORTANT]
+> this project will soon be renamed to cherri and will be rebuilt from the ground up. change your bookmarks and reroute your stuff. new resources can be found [here](/MOVING.md)
 
 # breeze.
 an indev ubg project, made to be clean and easy to use
