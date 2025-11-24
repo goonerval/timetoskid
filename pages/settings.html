@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cherri | settings</title>
+    <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
+    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="/assets/css/elements.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
+    <script src="/assets/js/lib/particles.js"></script>
+    <script src="/assets/js/colors.js"></script>
+</head>
+
+<body>
+
+    <style>
+        body {
+            background: none;
+        }
+
+        #particles-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .centerc {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+        }
+
+        h1 {
+            color: var(--bright-text);
+            font-size: 2.5rem;
+        }
+
+        .hcenter {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        ::-webkit-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .bottom-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            opacity: 0.3;
+            background: radial-gradient(at bottom, var(--bg-3) 30%, transparent 70%);
+        }
+
+        .top-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            opacity: 0.3;
+            background: radial-gradient(at top, var(--bg-3) 30%, transparent 70%);
+        }
+
+        .settings-card {
+            background: var(--bg-2);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px;
+            width: 350px;
+            border: 1px solid var(--border-4);
+        }
+
+        .settings-card h1 {
+            color: var(--bright-text);
+            font-size: 1.75rem;
+            margin-bottom: -10px;
+        }
+
+        .settings-card h1.main {
+            color: transparent;
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .settings-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .settings-card.active {
+            display: block;
+        }
+
+        .settings-side {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .settings-side button {
+            background: none;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin: 4px;
+            width: 150px;
+            color: var(--bright-text);
+            font-size: 1rem;
+            transition: 0.1s ease;
+            text-align: left;
+        }
+
+        .settings-side button:hover {
+            background: var(--bg-3);
+            cursor: pointer;
+        }
+
+        .settings-side button.active {
+            background: var(--bg-4);
+            border: 1px solid var(--border-4);
+        }
+
+        .settings-side button i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .settings-section h2 {
+            color: var(--bright-text);
+            font-size: 1.3rem;
+            margin-bottom: -10px;
+        }
+
+        .wisp-servers {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-direction: column;
+            height: 280px;
+            overflow: scroll;
+        }
+
+        .wisp-servers button {
+            background: var(--bg-2);
+            border: 1px solid var(--border-4);
+            border-radius: 10px;
+            padding: 10px;
+            color: var(--bright-text);
+            font-size: 1rem;
+            transition: 0.1s ease;
+        }
+
+        .wisp-servers button:hover {
+            background: var(--bg-4);
+            cursor: pointer;
+        }
+
+        .wisp-servers button.active {
+            background: var(--bg-3);
+        }
+
+        .settings-card input {
+            width: 93%;
+            padding: 10px;
+            margin-top: 10px;
+            background: var(--bg-3);
+            border: 1px solid var(--border-4);
+            border-radius: 10px;
+            color: var(--bright-text);
+        }
+
+        .settings-card input::placeholder {
+            color: var(--text);
+        }
+
+        .settings-card input:focus {
+            outline: none;
+            border: 1px solid var(--accent);
+        }
+    </style>
+    <div class="top-glow"></div>
+    <div class="bottom-glow"></div>
+    <div id="particles-container"></div>
+
+    <div class="settings-container">
+        <div class="settings-side">
+            <button onclick="settingsNav('info')" class="active" style="margin-top: 0px;">
+                <i class="ri-information-line"></i>About
+            </button>
+            <button onclick="settingsNav('browser')">
+                <i class="ri-seo-line"></i>Browser
+            </button>
+            <button onclick="settingsNav('cloaks')">
+                <i class="ri-eye-off-line"></i>Cloaks
+            </button>
+            <button onclick="settingsNav('customize')">
+                <i class="ri-palette-line"></i>Customize
+            </button>
+        </div>
+        <div class="settings-section info active">
+            <div class="settings-card">
+                <h1 class="main">About</h1>
+                <p>cherri is an unblocked games website with games, apps, movies, a proxy, and more. I plan to add more
+                    to the
+                    website, so stay tuned!</p>
+                <p>
+                    <b>x8r</b> - Owner <br>
+                    <b>useclassplay</b> - Games <br>
+                    <b>Novastream</b> - Movies and TV <br>
+                    <b>Mercury Workshop</b> - Scramjet and Libcurl <br>
+                </p>
+            </div>
+        </div>
+        <div class="settings-section browser">
+            <div class="settings-card">
+                <h1 class="main">Browser</h1>
+                <p>Manage settings related to the proxy.</p>
+            </div>
+            <div class="settings-card">
+                <h2>Wisp Server</h2>
+                <p>Change the content server. Make sure your current one isn't blocked, or you will encounter errors.
+                    <br><br>
+                    Current server: <b id="currentWisp">Fetching...</b>
+                </p>
+                <div class="wisp-servers">
+                    <button onclick="setWispServer('wss://wisp.rhw.one/')">RHW</button>
+
+                    <button onclick="setWispServer('wss://aluu.xyz/wisp/')">Alu 1</button>
+                    <button onclick="setWispServer('wss://freemathhw.xyz/wisp/')">Alu 2</button>
+                    <button onclick="setWispServer('wss://canvaslogin.org/wisp/')">Alu 3</button>
+                    <button onclick="setWispServer('wss://tnlnda.xyz/wisp/')">Alu 4</button>
+
+                    <button onclick="setWispServer('wss://incog.works/wisp/')">Incognito 1</button>
+                    <button onclick="setWispServer('wss://math.mathpuns.lol/wisp/')">Incognito 2</button>
+                    <button onclick="setWispServer('wss://math.americahistory.online/wisp/')">Incognito 3</button>
+                    <button onclick="setWispServer('wss://english.geniuslecture.club/wisp/')">Incognito 4</button>
+
+                    <button onclick="setWispServer('wss://definitelyscience.com/wisp/')">Definitely Science 1</button>
+                    <button onclick="setWispServer('wss://onlinegames.ro/wisp/')">Definitely Science 2</button>
+                    <button onclick="setWispServer('wss://mages.io/wisp/')">Definitely Science 3</button>
+                    <button onclick="setWispServer('wss://lichology.com/wisp/')">Definitely Science 4</button>
+
+                    <button onclick="setWispServer('wss://anura.pro/')">Anura 1</button>
+                    <button onclick="setWispServer('wss://adoptmy.baby/')">Anura 2</button>
+                    <button onclick="setWispServer('wss://wallstjournal.click/')">Anura 3</button>
+                    <button onclick="setWispServer('wss://mexicoon.top/')">Anura 4</button>
+                    <button onclick="setWispServer('wss://onlineosdev.nl/')">Anura 5</button>
+                    <button onclick="setWispServer('wss://swordartii.online/')">Anura 6</button>
+
+                    <button onclick="setWispServer('wss://phantom.lol/wisp/')">Phantom</button>
+                    <button onclick="setWispServer('wss://wisp.mercurywork.shop/')">Mercury</button>
+
+                    <button onclick="setWispServer('wss://wisp.terbiumon.top/wisp/')">Terbium 1</button>
+                    <button onclick="setWispServer('wss://quantumchemistry.club/wisp/')">Terbium 2</button>
+                    <button onclick="setWispServer('wss://explorechemistry.online/wisp/')">Terbium 3</button>
+                    <button onclick="setWispServer('wss://webmath.help/wisp/')">Terbium 4</button>
+
+                    <button onclick="setWispServer('wss://radiusproxy.app/wisp/')">Radius 1</button>
+                    <button onclick="setWispServer('wss://radiusproxy.app/adblock/')">Radius 1 (Adblock)</button>
+                    <button onclick="setWispServer('wss://radiusowski.site/wisp/')">Radius 2</button>
+                    <button onclick="setWispServer('wss://radiusowski.site/adblock/')">Radius 2 (Adblock)</button>
+                </div>
+            </div>
+        </div>
+        <div class="settings-section cloaks">
+            <div class="settings-card">
+                <h1 class="main">Cloaking</h1>
+                <p>Set how your tab looks.</p>
+            </div>
+            <div class="settings-card">
+                <h2>Presets</h2>
+                <p>Cloaks made just for you. Set one and go.</p>
+                <div class="wisp-servers">
+                    <button onclick="cloakMe('none')">Default</button>
+                    <button onclick="cloakMe('gclassroom')">Google Classroom</button>
+                    <button onclick="cloakMe('gdrive')">Google Drive</button>
+                    <button onclick="cloakMe('google')">Google Search</button>
+                    <button onclick="cloakMe('edpuzzle')">Edpuzzle</button>
+                    <button onclick="cloakMe('iready')">i-Ready</button>
+                    <button onclick="cloakMe('gmail')">Gmail</button>
+                    <button onclick="cloakMe('blooket')">Blooket</button>
+                    <button onclick="cloakMe('kahoot')">Kahoot</button>
+                </div>
+            </div>
+            <div class="settings-card">
+                <h2>Custom Cloak</h2>
+                <p>Set a custom tab title and icon.</p>
+                <input type="text" onkeyup="setTabTitle(this.value)" placeholder="Tab title">
+                <input type="text" onkeyup="setTabIcon(this.value)" placeholder="Website for icon">
+            </div>
+        </div>
+        <div class="settings-section customize">
+            <div class="settings-card">
+                <h1 class="main">Customize</h1>
+                <p>Make cherri yours.</p>
+            </div>
+            <div class="settings-card">
+                <h2>Themes</h2>
+                <p>Pretty cool themes that I think you'll like.</p>
+                <div class="wisp-servers">
+                    <button onclick="applyTheme('default')">Default</button>
+                    <button onclick="applyTheme('ocean')">Ocean</button>
+                    <button onclick="applyTheme('forest')">Forest</button>
+                    <button onclick="applyTheme('ember')">Ember</button>
+                    <button onclick="applyTheme('lavendar')">Lavendar</button>
+                    <button onclick="applyTheme('midnight')">Midnight</button>
+                    <button onclick="applyTheme('sand')">Dunes</button>
+                    <button onclick="applyTheme('mint')">Mint</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        particlesJS.load('particles-container', '/assets/json/config/particles.json', function () {
+            console.log('Particles.js config loaded');
+        });
+    </script>
+
+    <script src="/assets/js/settings.js" defer></script>
+</body>
+
+</html>

@@ -4,75 +4,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>breeze | movies</title>
+    <title>cherri | movies</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fdn.fontcdn.ir">
     <link rel="preconnect" href="https://v1.fontapi.ir">
     <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet">
-    <link rel="shortcut icon" href="/assets/fav.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
+    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <script src="/assets/js/lib/particles.js"></script>
+    <script src="/assets/js/colors.js"></script>
 </head>
-
+<script>
+    particlesJS.load('particles-container', '/assets/json/config/particles.json', function () {
+        console.log('Particles.js config loaded');
+    });
+</script>
 <style>
-    @font-face {
-        font-family: font;
-        src: url("/assets/fonts/lexenddeca.ttf");
+    #particles-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: 0.5;
     }
 
     * {
-        font-family: font;
+        font-family: Inter;
     }
 
     button {
-        font-family: arial !important;
+        font-family: inter !important;
     }
 
-    body, html {
-        background: black;
+    body,
+    html {
+        background: var(--bg);
     }
 
     input {
-        background: rgb(15 15 15) !important;
+        background: var(--bg-5) !important;
         font-size: 14px !important;
-        font-family: Arial !important;
+        font-family: inter !important;
         padding: 10px 20px !important;
+        border: 1px solid var(--border-4) !important;
     }
 
     input:focus {
         outline: none;
-        background: rgb(25, 25, 25) !important;
+        background: var(--bg-4) !important;
+        border: 1px solid var(--border-4) !important;
     }
 
     .switcher {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        font-family: arial;
+        font-family: inter;
     }
 
     ::-webkit-scrollbar {
-        scrollbar-width: thin;
+        scrollbar-width: none;
     }
+
+    .bottom-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+            background: radial-gradient(at bottom, var(--bg-3) 30%, transparent 70%);
+        }
+
+        .top-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+            background: radial-gradient(at top, var(--bg-3) 30%, transparent 70%);
+        }
 </style>
 
 <body class="text-white min-h-screen p-8" x-data="app()">
+    <div class="top-glow"></div>
+    <div class="bottom-glow"></div>
+    <div id="particles-container"></div>
     <div class="container mx-auto">
-        <h1 class="text-center text-4xl">breeze | movies</h1>
+        <h1 class="text-center text-4xl z-34 font-bold" style="z-index: 34 !important;">Movies and TV</h1>
         <br>
         <div class="mb-8 flex flex-col md:flex-row gap-4 transition-all duration-200 items-center justify-between">
-                <input type="text" x-model="searchQuery" @input="searchContent()" placeholder="what are we watching today?"
-                    class="transition-all w-1/2  left-1/2 translate-x-[25%] text-white rounded-2xl px-4 py-2">
+            <input type="text" x-model="searchQuery" @input="searchContent()" placeholder="What are we watching today?"
+                class="transition-all w-1/2  left-1/2 translate-x-[25%] text-white rounded-2xl px-4 py-2">
         </div>
 
         <div class="switcher">
-            <button @click="currentTab = 'movies'" :class="currentTab === 'movies' ? 'bg-white text-black' : 'bg-[#1d1d1d]'"
+            <button @click="currentTab = 'movies'"
+                :class="currentTab === 'movies' ? 'bg-[var(--bg-4)] text-white' : 'bg-[var(--bg-5)]'"
                 class="px-4 py-2 rounded-2xl transition-all">
-                movies
+                Movies
             </button>
-            <button @click="currentTab = 'shows'" :class="currentTab === 'shows' ? 'bg-white text-black' : 'bg-[#1d1d1d]'"
+            <button @click="currentTab = 'shows'"
+                :class="currentTab === 'shows' ? 'bg-[var(--bg-4)] text-white' : 'bg-[var(--bg-5)]'"
                 class="px-4 py-2 rounded-2xl transition-all">
-                tv and shows
+                TV and Shows
             </button>
         </div>
 
@@ -94,11 +143,12 @@
 
         <div class="mt-8 flex justify-center space-x-4">
             <button @click="currentPage > 1 && changePage(currentPage - 1)" :disabled="currentPage === 1"
-                class="bg-[#0d0d0d] px-6 py-2 rounded-2xl disabled:opacity-50">
+                class="bg-[var(--bg-5)] px-6 py-2 z-34 rounded-2xl disabled:opacity-50">
                 Previous
             </button>
-            <span class="px-6 py-2" style="font-family: arial;">Page <span x-text="currentPage" style="font-family: arial;"></span></span>
-            <button @click="changePage(currentPage + 1)" class="rounded-2xl bg-[#0d0d0d] px-6 py-2 rounded">
+            <span class="px-6 py-2" style="font-family: inter;">Page <span x-text="currentPage"
+                    style="font-family: inter;"></span></span>
+            <button @click="changePage(currentPage + 1)" class="rounded-2xl bg-[var(--bg-5)] z-34 px-6 py-2 rounded">
                 Next
             </button>
         </div>

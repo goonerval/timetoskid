@@ -12,31 +12,55 @@
     <link href="https://v1.fontapi.ir/css/SFProDisplay" rel="stylesheet">
     <link rel="stylesheet" href="/fa/css/all-pro.css">
     <link rel="shortcut icon" href="/assets/fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <script src="/assets/js/lib/particles.js"></script>
+    <script src="/assets/js/colors.js"></script>
 </head>
+<script>
+    particlesJS.load('particles-container', '/assets/json/config/particles.json', function () {
+        console.log('Particles.js config loaded');
+    });
+</script>
 
 <style>
+    #particles-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
     @font-face {
         font-family: font;
         src: url("/assets/fonts/lexenddeca.ttf");
     }
 
     * {
-        font-family: font;
+        font-family: inter;
+    }
+
+    *:not(#particles-container) {
+        z-index: 10 !important; 
     }
 
     button {
-        font-family: arial !important;
+        font-family: inter !important;
     }
 
     body,
     html {
-        background: black;
+        background: var(--bg);
     }
 
     input {
         background: rgb(15 15 15) !important;
         font-size: 14px !important;
-        font-family: Arial !important;
+        font-family: inter !important;
         padding: 10px 20px !important;
     }
 
@@ -49,19 +73,49 @@
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        font-family: arial;
+        font-family: inter;
     }
 
     span {
-        font-family: Arial;
+        font-family: inter;
     }
+
+    .bottom-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+            background: radial-gradient(at bottom, var(--bg-3) 30%, transparent 70%);
+        }
+
+        .top-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+            background: radial-gradient(at top, var(--bg-3) 30%, transparent 70%);
+        }
 </style>
 
+    <div id="particles-container"></div>
 <body class=" text-white min-h-screen p-8" x-data="app()">
-    <div class="container mx-auto max-w-6xl">
-        <br><br>
-<a href="/pages/movies.html" class="inline-block mb-6 text-white-400 transition-all hover:text-gray-300">← Back to
-    Browse</a>
+    <div class="top-glow"></div>
+    <div class="bottom-glow"></div>
+                <a href="/pages/movies.html" class="inline-block mb-6 text-white-400 transition-all hover:text-gray-300"
+                    style="z-index: 304 !important;">← Back to
+                    Browse</a>
         <div x-show="content">
             <h1 class="text-4xl font-bold mb-4" x-text="content?.title || content?.name"></h1>
 
@@ -80,24 +134,24 @@
             </div>
 
             <template x-if="isShow">
-                <div class="bg-[#0d0d0d] rounded-3xl p-6 mb-6">
+                <div class="bg-[var(--bg-2)] z-34 rounded-3xl p-6 mb-6">
                     <h3 class="text-xl font-semibold mb-4">Episodes</h3>
 
                     <div class="flex items-center space-x-2 mb-4 flex-wrap">
                         <template x-for="season in seasons" :key="season">
                             <button @click="selectedSeason = season; updateEpisodes()"
                                 class="px-4 py-2 m-1 rounded-2xl whitespace-nowrap"
-                                :class="selectedSeason === season ? 'bg-white text-black' : 'bg-[#1d1d1d] hover:bg-[#2d2d2d]'">
+                                :class="selectedSeason === season ? 'bg-[var(--bg-4)] text-white' : 'bg-[var(--bg-5)] hover:bg-[var(--bg)]'">
                                 Season <span x-text="season"></span>
                             </button>
                         </template>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-2 z-34 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         <template x-for="episode in seasonData?.episodes" :key="episode.episode_number">
                             <div @click="selectedEpisode = episode.episode_number; loadEpisode()"
-                                class="bg-[#1d1d1d] rounded-3xl overflow-hidden transition-all cursor-pointer hover:bg-[#2d2d2d]"
-                                :class="selectedEpisode === episode.episode_number ? 'ring-2 ring-white/50' : ''">
+                                class="bg-[var(--bg-5)] rounded-3xl overflow-hidden transition-all cursor-pointer hover:bg-[var(--bg)]"
+                                :class="selectedEpisode === episode.episode_number ? 'ring-2 ring-[var(--bg-4)]' : ''">
                                 <div class="relative aspect-video">
                                     <img :src="episode.still_path 
                                               ? 'https://image.tmdb.org/t/p/w300' + episode.still_path
@@ -118,25 +172,27 @@
                 </div>
             </template>
 
-            <div class="bg-[#0d0d0d] rounded-3xl p-6 mb-6">
-                <h3 class="text-xl font-semibold mb-4">Sources</h3>
+            <div class="bg-[var(--bg-2)] z-34 rounded-3xl p-6 mb-6">
+                <h3 class="z-34 text-xl font-semibold mb-4">Sources</h3>
                 <div class="flex flex-wrap gap-2">
                     <template x-for="source in availableSources" :key="source.id">
-                        <button @click="selectedSource = source.id; updateVideoUrl()" class="transition-all px-4 py-2 rounded-2xl"
-                            :class="selectedSource === source.id ? 'bg-white text-black' : 'bg-[#1d1d1d] hover:bg-[#2d2d2d]'"
+                        <button @click="selectedSource = source.id; updateVideoUrl()" class="z-888 transition-all px-4 py-2 rounded-2xl"
+                            :class="selectedSource === source.id ? 'bg-[var(--bg-4)] text-white' : 'bg-[var(--bg-5)] hover:bg-[var(--bg)]'"
                             x-text="source.name">
                         </button>
                     </template>
                 </div>
             </div>
 
-            <div class="bg-[#0d0d0d] rounded-3xl p-6">
+            <div class="bg-[var(--bg-2)] rounded-3xl p-6">
                 <h3 class="text-xl font-semibold mb-4">Overview</h3>
-                <p class="text-gray-300" style="font-family: Arial;" x-text="content?.overview"></p>
+                <p class="text-gray-300" style="font-family: inter;" x-text="content?.overview"></p>
             </div>
             <br><br>
         </div>
     </div>
+
+
 
     <script>
         

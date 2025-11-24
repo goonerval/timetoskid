@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cherri | games</title>
+    <link rel="shortcut icon" href="/assets/img/fav.png" type="image/x-icon" id="tabIcon">
+    <link rel="stylesheet" href="/assets/css/colors.css" id="css-theme-link">
+    <link rel="stylesheet" href="/assets/css/elements.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
+    <script src="/assets/js/lib/particles.js"></script>
+    <script src="/assets/js/colors.js"></script>
+</head>
+<body>
+
+    <style>
+        #particles-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .centerc {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+        }
+
+        h1 {
+            color: var(--bright-text);
+            font-size: 2.5rem;
+        }
+
+        .hcenter {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .app {
+            width: 280px;
+            height: 100px;
+            border-radius: 15px;
+            background: var(--bg-4);
+            border: 1px solid var(--border-4);
+            margin: 10px;
+            transition: outline 0.05s ease, background 0.1s;
+            outline: 0px solid var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .app:hover {
+            background: var(--bg-3);
+            cursor: pointer;
+        }
+
+        .app img {
+            height: 70px;
+            width: 70px;
+            margin: 15px;
+            border-radius: 10px;
+        }
+
+        .app h2 {
+            color: var(--bright-text);
+            position: relative;
+            top: 0%;
+            transform: translateY(30%);
+            font-size: 20px;
+        }
+
+        .apps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 90%;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .bottom-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            opacity: 0.3;
+            background: radial-gradient(at bottom, var(--bg-3) 30%, transparent 70%);
+        }
+
+        .top-glow {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 35%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            opacity: 0.3;
+            background: radial-gradient(at top, var(--bg-3) 30%, transparent 70%);
+        }
+    </style>
+    <div class="top-glow"></div>
+    <div id="particles-container"></div>
+    <div class="hcenter">
+        <h1 style="text-align: center;">Games</h1>
+        <input style="margin: 3px;" type="text" placeholder="Search for a game..." onkeyup="searchApps(this.value)">
+    </div>
+
+    <div class="apps-container hcenter" style="top: 18%;">
+
+    </div>
+
+    <script>
+        particlesJS.load('particles-container', '/assets/json/config/particles.json', function () {
+            console.log('Particles.js config loaded');
+        });
+    </script>
+    <div class="bottom-glow"></div>
+    <script defer>
+        const acont = document.querySelector('.apps-container');
+
+        let data
+        let res
+
+        async function getJson() {
+            res = await fetch('/assets/json/classplay.json');
+            data = await res.json();
+        }
+
+        function loadApps() {
+            getJson().then(() => {
+                data.forEach(app => {
+                    const appDiv = document.createElement('div');
+                    appDiv.classList.add('app');
+
+                    appDiv.innerHTML = `
+                    <div class="container" onclick="location.href = '/pages/play.html?launch=${app.url}'">
+                        <img src="${app.image}" alt="">
+                        <h2 class="apptitle">${app.name}</h2>
+                    </div>
+                    `;
+
+                    acont.appendChild(appDiv);
+                });
+            })
+        }
+
+        loadApps()
+
+        function searchApps(q) {
+            const apps = document.querySelectorAll('.app');
+            apps.forEach(app => {
+                const title = app.querySelector('.apptitle').innerText.toLowerCase();
+                if (title.includes(q.toLowerCase())) {
+                    app.style.display = 'block';
+                } else {
+                    app.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <script>
+        var x, i, j, l, ll, selElmnt, a, b, c;
+        x = document.getElementsByClassName("custom-select");
+        l = x.length;
+        for (i = 0; i < l; i++) {
+            selElmnt = x[i].getElementsByTagName("select")[0];
+            ll = selElmnt.length;
+            a = document.createElement("DIV");
+            a.setAttribute("class", "select-selected");
+            a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+            x[i].appendChild(a);
+            b = document.createElement("DIV");
+            b.setAttribute("class", "select-items select-hide");
+            for (j = 1; j < ll; j++) {
+                c = document.createElement("DIV");
+                c.innerHTML = selElmnt.options[j].innerHTML;
+                c.addEventListener("click", function (e) {
+
+                    var y, i, k, s, h, sl, yl;
+                    s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+                    sl = s.length;
+                    h = this.parentNode.previousSibling;
+                    for (i = 0; i < sl; i++) {
+                        if (s.options[i].innerHTML == this.innerHTML) {
+                            s.selectedIndex = i;
+                            h.innerHTML = this.innerHTML;
+                            y = this.parentNode.getElementsByClassName("same-as-selected");
+                            yl = y.length;
+                            for (k = 0; k < yl; k++) {
+                                y[k].removeAttribute("class");
+                            }
+                            this.setAttribute("class", "same-as-selected");
+                            break;
+                        }
+                    }
+                    h.click();
+                });
+                b.appendChild(c);
+            }
+            x[i].appendChild(b);
+            a.addEventListener("click", function (e) {
+                e.stopPropagation();
+                closeAllSelect(this);
+                this.nextSibling.classList.toggle("select-hide");
+                this.classList.toggle("select-arrow-active");
+            });
+        }
+        function closeAllSelect(elmnt) {
+            var x, y, i, xl, yl, arrNo = [];
+            x = document.getElementsByClassName("select-items");
+            y = document.getElementsByClassName("select-selected");
+            xl = x.length;
+            yl = y.length;
+            for (i = 0; i < yl; i++) {
+                if (elmnt == y[i]) {
+                    arrNo.push(i)
+                } else {
+                    y[i].classList.remove("select-arrow-active");
+                }
+            }
+            for (i = 0; i < xl; i++) {
+                if (arrNo.indexOf(i)) {
+                    x[i].classList.add("select-hide");
+                }
+            }
+        }
+        document.addEventListener("click", closeAllSelect);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+@font-face {
+    font-family: onest;
+    src: url("/assets/fonts/onest.ttf");
+}
+
+@font-face {
+    font-family: inter;
+    src: url("/assets/fonts/inter.ttf");
+}
+
+* {
+    font-family: inter, sans-serif;
+}
