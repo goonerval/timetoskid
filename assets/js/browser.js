@@ -323,3 +323,11 @@ setInterval(() => {
 }, 1000);
 
 newTab()
+
+const urlParams = new URLSearchParams(window.location.search);
+const launchUrl = urlParams.get("launch");
+if (launchUrl) {
+  setTimeout(() => {
+    go(scramjet.encodeUrl(launchUrl));
+  }, 100);
+}
