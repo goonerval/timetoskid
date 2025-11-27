@@ -1014,3 +1014,48 @@ button.button:hover {
     width: 100vw;
     height: 100vh;
 }
+
+.browser-loading {
+    background: var(--bg);
+    height: 3px;
+    width: 200px;
+    position: relative;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 55%;
+    border-radius: 100px;
+}
+
+.browser-loading::after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    background: var(--accent);
+    left: 0;
+    border-radius: 100px;
+    bottom: 0;
+    width: 100%;
+    animation: browser-loading-lol .75s infinite ease;
+}
+
+@keyframes browser-loading-lol {
+    0% {
+        transform-origin: left;
+        transform: scaleX(0);
+    }
+
+    50% {
+        transform-origin: left;
+        transform: scaleX(1);
+    }
+
+    50.01% {
+        transform-origin: right;
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform-origin: right;
+        transform: scaleX(0);
+    }
+}
