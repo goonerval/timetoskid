@@ -3,7 +3,7 @@
   <img alt="image" src="https://github.com/user-attachments/assets/314409be-199f-4d7d-acc8-5feb3b61dad8" />
 </p>
 <p align="center">
-  an indev ubg project made to be clean and easy to use. with over 500 games from 2 different stores, 40 apps, a blazing fast browser, and more, this is easily one of the best websites for school.
+  an indev ubg project made to be clean and easy to use. with over 500 games from 2 different stores, 40 apps, a blazing fast browser, extensive customization, and more, this is easily one of the best websites for school.
 </p>
 
 <hr>
