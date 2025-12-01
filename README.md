@@ -14,7 +14,7 @@
 - [x] proxy
 - [x] movies
 - [ ] chatroom
-- [ ] game overlay (in the works!)
+- [x] game overlay 
 
 ## deployment
 you can deploy this site to basically any deployment site ever because it's written in plain html and stuff so you can also deploy it locally!!1!!1
