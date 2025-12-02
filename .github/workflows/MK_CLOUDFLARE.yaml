@@ -1,0 +1,28 @@
+name: Make Cloudflare Deployable Repo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  push-clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove /stores/classplay/
+        run: rm -rf stores/classplay
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add target repo
+        run: git remote add target https://x-access-token:${{ secrets.REPO_TOKEN }}@github.com/x8rr/cherri-cloudflare.git
+
+      - name: Commit and push
+        run: |
+          git add .
+          git commit -m "Update repo (folder removed)" || echo "No changes to commit"
+          git push target main --force

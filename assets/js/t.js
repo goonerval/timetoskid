@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const toasts = Array.from(
       toastContainer.querySelectorAll(".toast:not(.is-hiding)")
     );
-    const visibleStackedCount = 3;
+    const visibleStackedCount = 5;
 
     toasts.forEach((toast, index) => {
       toast.style.zIndex = toasts.length - index;
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.showToast = function (type, message, iconName) {
-    const maxToasts = 3;
+    const maxToasts = 5;
 
     const currentToasts = toastContainer.querySelectorAll(
       ".toast:not(.is-hiding)"

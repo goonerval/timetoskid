@@ -21,15 +21,6 @@ body {
     background-size: 20px 20px;
 }
 
-@font-face {
-    font-family: lexend;
-    src: url("/assets/fonts/lexend.ttf");
-}
-
-* {
-    font-family: lexend;
-}
-
 nav {
     background: transparent;
     z-index: 5;
@@ -140,7 +131,7 @@ li.toright {
 }
 
 .font-medium {
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .lucide {
@@ -284,6 +275,7 @@ nav ul li.disabled {
 .settings-content-container h2 {
     font-size: 24px;
     margin-bottom: 7px;
+    font-weight: 550;
 }
 
 .settings-content-container p {
@@ -945,7 +937,7 @@ button.button:hover {
     border-radius: 12px;
     color: white;
     font-size: 14px;
-    font-family: lexend;
+    font-family: google sans;
     transition: 0.2s;
     box-sizing: border-box;
 }
@@ -964,7 +956,7 @@ button.button:hover {
     border-radius: 12px;
     color: white;
     font-size: 14px;
-    font-family: lexend;
+    font-family: google sans;
     cursor: pointer;
     transition: 0.2s;
     margin-bottom: 10px;

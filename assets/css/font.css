@@ -18,6 +18,21 @@
     src: url("/assets/fonts/lexend.ttf");
 }
 
+@font-face {
+    font-family: figree;
+    src: url(/assets/fonts/figtree.ttf);
+}
+
+@font-face {
+    font-family: jakarta;
+    src: url(/assets/fonts/jakarta.ttf);
+}
+
+@font-face {
+    font-family: google sans;
+    src: url(/assets/fonts/googlesans.ttf);
+}
+
 * {
-    font-family: lexend, sans-serif;
+    font-family: google sans, sans-serif;
 }

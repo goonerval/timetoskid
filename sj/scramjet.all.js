@@ -4337,10 +4337,7 @@ ${l}`;
                 <head>
                     <meta charset="utf-8" />
                     <title>Scramjet</title>
-                    <style>
-                    
-                    
-                    </style>
+                    <link rel="stylesheet" href="/assets/css/font.css">
                 </head>
                 <body>
                     <style>
@@ -4350,7 +4347,6 @@ ${l}`;
     --beach: #f1e8e1;
     --shore: #b1a8a1;
     --accent: #ffffff;
-    --font-sans: Lexend;
     --font-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
