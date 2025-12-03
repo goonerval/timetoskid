@@ -122,6 +122,14 @@ const allThemeOptions = [
   "dunes",
   "lavendar",
   "midnight",
+  "coral",
+  "golden",
+  "lime",
+  "magenta",
+  "neon",
+  "royal blue",
+  "sea",
+  "violet",
 ];
 
 const allStoreOptions = [

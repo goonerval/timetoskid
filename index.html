@@ -42,8 +42,11 @@
     <script defer src="https://cloud.umami.is/script.js"
         data-website-id="aa852720-724b-4441-be4c-6db9ef160eb9"></script>
     <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/icons/fonts/remixicon.css">
+
 </html>
 </head>
+
 <body>
     <nav>
         <ul>
@@ -58,28 +61,29 @@
             <li class="divider"></li>
             <li>
                 <a onclick="toggleGames()" href="#" data-page="games">
-                    <i class="fas fa-gamepad-modern"></i>
+                    <i class="ri-gamepad-line"></i>
                 </a>
             </li>
             <li>
                 <a onclick="toggleApps()" href="#" data-page="apps">
-                    <i class="fas fa-grid"></i>
+                    <i class="ri-apps-line"></i>
                 </a>
             </li>
             <li>
                 <a onclick="navTo('movies')" href="#" data-page="movies">
-                    <i class="fas fa-clapperboard"></i>
+                    <i class="ri-video-line"></i>
                 </a>
             </li>
             <li>
-                <a onclick="navTo('vms'); showToast('success', 'VMs are still in beta! Report bugs on the repo/Discord.', 'fas fa-exclamation-triangle')" href="#" data-page="vms">
-                    <i class="fas fa-computer"></i>
+                <a onclick="navTo('vms'); showToast('success', 'VMs are still in beta! Report bugs on the repo/Discord.', 'fas fa-exclamation-triangle')"
+                    href="#" data-page="vms">
+                    <i class="ri-computer-line"></i>
                 </a>
             </li>
             <li class="divider"></li>
             <li>
                 <a onclick="togglePartners()" href="#" data-page="movies">
-                    <i class="fas fa-handshake-simple"></i>
+                    <i class="ri-shake-hands-fill"></i>
                 </a>
             </li>
             <!--
@@ -91,12 +95,12 @@
             -->
             <li>
                 <a onclick="toggleSettings()" href="#" data-page="dc">
-                    <i class="fas fa-cog"></i>
+                    <i class="ri-settings-3-line"></i>
                 </a>
             </li>
             <li>
                 <a target="_blank" href="https://discord.gg/hUYzETaQ9U" data-page="settings">
-                    <i class="fa-brands fa-discord"></i>
+                    <i class="ri-discord-fill"></i>
                 </a>
             </li>
         </ul>
@@ -157,7 +161,7 @@
             </div>
 
             <div class="settings-content-container">
-                <div id="settings-general" class="settings-active settings-page">
+                <div id="settings-general" class="settings-page settings-active">
                     <h2>Theme</h2>
                     <p>The color scheme used across the whole site. Some changes might not happen instantly, so refresh
                         to see those take place.</p>
@@ -263,6 +267,41 @@
                         </div>
                     </div>
 
+                    <h2>about:blank</h2>
+                    <p>Create a new about:blank tab to hide Cherri from your history and filter.</p>
+                    <button onclick="
+                        openAB()
+                    " class="button"><i class="ri-external-link-line"></i>&nbsp;Open in about:blank</button>
+                    <br><br>
+                    <h2>Auto Cloak</h2>
+                    <p>If this toggle is switched on, then as soon as the page loads, it will immediately open the about:blank cloaked page and redirect the main page to Google. Off by default.</p>
+                    <label class="switch">
+                        <input id="cloak-toggle" checked="" onchange="updateABSettings()" type="checkbox">
+                        <div class="slider">
+                            <div class="circle">
+                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g>
+                                        <path data-original="#000000" fill="currentColor"
+                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                        </path>
+                                    </g>
+                                </svg>
+                                <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                    viewBox="0 0 24 24" y="0" x="0" height="10" width="10"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g>
+                                        <path class="" data-original="#000000" fill="currentColor"
+                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </label>
                     <br><br><br>
                 </div>
 
@@ -323,11 +362,15 @@
                 </div>
 
                 <div id="settings-updates" class="settings-page">
-                    <h2>What's New in Beta 2.6</h2>
+                    <h2>What's New in Beta 2.7</h2>
                     <p class="update-cont">
-                        For a preview of Beta 2.6, we added Chromium virtual machines to Cherri. They can be accessed by clicking the computer icon, and then New VM. If the iframe does not load, that is probably because they are under load as Hyperbeam has a terrible limit for free plans. Report bugs in the Discord or on the repo.
+                        In Beta 2.7, we added tons of cool features to Cherri! Check them out below.
                         <br><br>
-                        • VMs <br>
+                        • The ability to download games from the overlay (GN Math only) <br>
+                        • Hollow Knight <br>
+                        • 8 New themes <br>
+                        • about:blank cloaking <br>
+                        • Auto about:blank opener <br>
                     </p>
                 </div>
             </div>
@@ -335,7 +378,7 @@
             <p class="absolute bottom-4 text-[var(--text)] font-medium text-sm">cherri <span
                     class="opacity-70 bg-[var(--accent-2)] p-1 rounded-lg text-white"><a class="text-white release-link"
                         href="https://github.com/x8rr/cherri/releases/latest" target="_blank"
-                        style="text-decoration: none;">beta 2.6</a></span></p>
+                        style="text-decoration: none;">beta 2.7</a></span></p>
         </div>
     </div>
 
@@ -425,14 +468,15 @@
         <br>
         <h1 style="text-align: center; font-size: 35px; color: var(--bright-text); font-weight: 500;">Partners</h1>
         <br>
-        <div class="partner-container h-[83%] overflow-y-scroll w-[475px] flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
+        <div
+            class="partner-container h-[83%] overflow-y-scroll w-[475px] flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
             <a href="https://prism.onl/" target="_blank" class="app partner-square">
                 <div class="bg-img" style="background: url('/assets/img/partners/prism.png');"></div>
                 <div class="app-title-cont">
                     <h2 class="app-title-h2">Prism</h2>
                 </div>
             </a>
-            
+
             <a href="https://github.com/Galaxy-Vortex/" target="_blank" class="app partner-square">
                 <div class="bg-img" style="background: url('/assets/img/partners/hydra.png');"></div>
                 <div class="app-title-cont">
@@ -584,7 +628,9 @@
                 const overlayOn = localStorage.getItem("cherri_useOverlay") ?? "yes"
                 if (overlayOn === "yes" && l.includes("/stores/")) {
                     document.querySelector("nav").style.opacity = 0
-                    document.querySelector("nav").style.pointerEvents = "none"
+                    setTimeout(() => {
+                        document.querySelector("nav").style.display = "none"
+                    }, 350)
                 }
                 homeContent.style.display = "none";
                 contentFrame.style.display = "block";
@@ -904,6 +950,46 @@
         function resetTheme() {
             localStorage.setItem("cherri_theme", "default")
             window.location.reload()
+        }
+
+        function openAB() {
+            if (window.self !== window.top) return
+
+            const win = window.open()
+            const url = window.location.href
+            const iframe = win.document.createElement('iframe')
+            iframe.style.width = '100vw'
+            iframe.style.height = '100vh'
+            iframe.style.border = 'none'
+            win.document.body.style.margin = '0'
+            iframe.src = url
+            win.document.body.appendChild(iframe)
+            window.location.href = "https://google.com/"
+        }
+
+        const abToggle = document.getElementById("cloak-toggle")
+        const abOn = localStorage.getItem("cherri_autoAB") ?? "no"
+
+        function updateABSettings() {
+            if (abToggle.checked) {
+                console.log("checked")
+                showToast("success", "Auto cloaking is now on!", "fas fa-check-circle")
+                localStorage.setItem("cherri_autoAB", "yes")
+            } else {
+                console.log("unchecked")
+                localStorage.setItem("cherri_autoAB", "no")
+                showToast("success", "Auto cloaking is now off!", "fas fa-check-circle")
+            }
+        }
+
+        if (abOn === "yes") {
+            abToggle.checked = true
+        } else {
+            abToggle.checked = false
+        }
+
+        if (localStorage.getItem("cherri_autoAB") === "yes") {
+            openAB()
         }
     </script>
 </body>
